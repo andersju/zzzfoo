@@ -82,9 +82,9 @@ light grey color for abstracts:
     zzzfoo -q 'quote if multiple search terms' --color-abstract '#777'
 
 Show synthetic abstracts (i.e. constructed by extracting text around search terms;
-the indexed abstract, shown by default. is often just the beginning of the file):
+the indexed abstract, shown by default, is often just the beginning of the file):
 
-    zzzfoo --synthetic-abstracts
+    zzzfoo --synthetic-abstract
 
 _(Note: this is a bit slower.)_
 
