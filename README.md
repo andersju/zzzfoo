@@ -3,13 +3,13 @@ zzzfoo: Desktop file search with Rofi and Recoll
 
 This script lets you combine the excellent full-text search tool [Recoll](https://www.lesbonscomptes.com/recoll/)
 with [Rofi](https://github.com/DaveDavenport/rofi) (popular dmenu replacement,
-among other things) to quickly search all your indexed files. It simply just
+among other things) to quickly search all your indexed files. It simply
 performs a Recoll search using  Recoll's Python module, pipes the output to
 `rofi -dmenu`, and (optionally) does something with the selected match.
 
 If you only need file paths in your results, forget this script and just grep/sed
 the result of `recoll -t -e -b <foobar>` and pipe that into rofi or dmenu; this
-script is basically a one-liner than got out of hand. However, if you want
+script is basically a one-liner that got out of hand. However, if you want
 titles and MIME types and highlighted extracts and colors, as well as
 various options, keep reading.
 
@@ -55,7 +55,7 @@ example:
 
 Open selected match with `xdg-open`:
 
-`zzzfoo -o xdg-open`
+    zzzfoo -o xdg-open
 
 _(Do NOT -o something_that_deletes_files; there are certainly bugs. See
 [the Arch wiki](https://wiki.archlinux.org/index.php/default_applications#xdg-utils)
@@ -64,25 +64,27 @@ for a reminder on how to set default applications for different MIME types.)_
 Exclude files of type message/rfc822 (emails), strip `/home/foobar/` from the
 _displayed_ file path in results list, open selected file with `xdg-open`:
 
-`zzzfoo -e ' -mime:message/rfc822' -p /home/foobar/ -o xdg-open`
+    zzzfoo -e ' -mime:message/rfc822' -p /home/foobar/ -o xdg-open
 
 _(See Recoll's manual section about [the query language](http://www.lesbonscomptes.com/recoll/usermanual/usermanual.html#RCL.SEARCH.LANG).)_
 
 Pass some options to Rofi -- here window at top right, 50% width:
 
-`zzzfoo -r '-location 3 -width 50'`
+    zzzfoo -r '-location 3 -width 50'`
+
+
 
 Run query directly (and show results in Rofi) without using the search dialog,
 light grey color for abstracts:
 
-`zzzfoo -q foobar --color-abstract '#777'`
+    zzzfoo -q foobar --color-abstract '#777'
 
-`zzzfoo -q 'quote if multiple search terms' --color-abstract '#777'`
+    zzzfoo -q 'quote if multiple search terms' --color-abstract '#777'
 
 Show synthetic abstracts (i.e. constructed by extracting text around search terms;
 the indexed abstract, shown by default. is often just the beginning of the file):
 
-`zzzfoo --synthetic-abstracts`
+    zzzfoo --synthetic-abstracts
 
 _(Note: this is a bit slower.)_
 
@@ -96,9 +98,7 @@ For theming Rofi, see https://github.com/DaveDavenport/rofi-themes.
 I suggest binding zzzfoo to something convenient. For example, for i3 I have the
 following in `~/.i3/config`:
 
-```
-bindsym $mod+space exec --no-startup-id ~/bin/zzzfoo -p /home/andersju/ -e ' -mime:message/rfc822' -o xdg-open
-```
+    bindsym $mod+space exec --no-startup-id ~/bin/zzzfoo -p /home/andersju/ -e ' -mime:message/rfc822' -o xdg-open
 
 Messy Python-free sed-n-awk alternative
 ---------------------------------------
