@@ -50,8 +50,8 @@ def process_doc(query, doc, match_obj, args):
 
     res['file_path'] = escape(doc.url)
     res['file_path'] = res['file_path'].replace('file://', '', 1)
-    if args.strip_path:
-        res['file_path'] = res['file_path'].replace(args.strip_path + '/', '', 1)
+    if args.strip_path and res['file_path'].startswith(args.strip_path):
+        res['file_path'] = res['file_path'][len(args.strip_path) + 1:]
 
     res['file_info'] = doc.mtype
 
