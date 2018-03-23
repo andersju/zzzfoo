@@ -26,16 +26,13 @@ Requirements
   * [Recoll](https://www.lesbonscomptes.com/recoll/) (and its Python module), tested with 1.21/1.23
   * [Rofi](https://github.com/DaveDavenport/rofi) 1.3+
 
-Many Linux distributions (as well as FreeBSD) package both Rofi and Recoll. In e.g. Debian/Ubuntu:
-
-```sh
-apt install recoll python-recoll rofi # or python3-recoll
-```
+Many Linux distributions (as well as FreeBSD) package both Rofi and Recoll. For e.g.
+Debian/Ubuntu, install `rofi recoll python-recoll` (or `python3-recoll`); for Arch, install `rofi recoll`.
 
 Note that Ubuntu 16.04 has Rofi 0.15.x which is very outdated. You need 1.3 or later.
 See Rofi's [installation guide](https://github.com/DaveDavenport/rofi/blob/next/INSTALL.md).
 
-Start `recoll` and let it index. (Recoll full-text indexes a bunch of file
+Start `recoll`, configure it to your liking and let it index. (Recoll full-text indexes a bunch of file
 types natively; others need [various helper programs](http://www.lesbonscomptes.com/recoll/features.html#doctypes),
 which may or may not be installed.)
 
