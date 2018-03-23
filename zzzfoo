@@ -92,12 +92,16 @@ def run_query(recoll_db, args):
     query = recoll_db.query()
     results = query.execute(unicode(args.query_string, 'utf-8'))
     match_obj = matchmethods()
+    user_num_results = int(args.num_results)
 
     if results:
-        results = query.fetchmany(int(args.num_results))
+        if results > user_num_results and user_num_results != 0:
+            results_docs = query.fetchmany(user_num_results)
+        else:
+            results_docs = query.fetchmany(results)
 
         results_list = []
-        for doc in results:
+        for doc in results_docs:
             results_list.append(process_doc(query, doc, match_obj, args))
 
         return results_list
@@ -150,7 +154,7 @@ def main(argv):
 
     # If query wasn't specified on command line, open a Rofi dialog to ask for it
     if not args.query_string:
-        rofi_search_cmd = ['rofi', '-dmenu', '-p', 'Search: ']
+        rofi_search_cmd = ['rofi', '-dmenu', '-p', 'Search']
 
         if args.rofi_options:
             rofi_search_cmd += args.rofi_options.split()
@@ -178,7 +182,7 @@ def main(argv):
         rofi_element_height = '2'
 
     rofi_results_cmd = ['rofi', '-dmenu', '-markup-rows', '-eh', rofi_element_height,
-                        '-sep', '\t', '-p', 'Filter results: ']
+                        '-sep', '\t', '-p', 'Filter results']
     if args.rofi_options:
         rofi_results_cmd += args.rofi_options.split()
 
