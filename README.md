@@ -22,12 +22,12 @@ WARNING: Still experimental, use at your own risk, etc.
 Requirements
 ------------
 
-  * Python 2 or 3
+  * Python 3
   * [Recoll](https://www.lesbonscomptes.com/recoll/) (and its Python module), tested with 1.21/1.23
   * [Rofi](https://github.com/DaveDavenport/rofi) 1.3+
 
 Many Linux distributions (as well as FreeBSD) package both Rofi and Recoll. For e.g.
-Debian/Ubuntu, install `rofi recoll python-recoll` (or `python3-recoll`); for Arch, install `rofi recoll`.
+Debian/Ubuntu, install `rofi recoll python3-recoll`; for Arch, install `rofi recoll`.
 
 Note that Ubuntu 16.04 has Rofi 0.15.x which is very outdated. You need 1.3 or later.
 See Rofi's [installation guide](https://github.com/DaveDavenport/rofi/blob/next/INSTALL.md).

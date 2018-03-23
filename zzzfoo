@@ -2,15 +2,12 @@
 # -*- coding: utf-8 -*-
 #
 # Do a Recoll search using Rofi. Requires Recoll, the Recoll Python module,
-# and Rofi.
+# and Rofi. Python 3 only.
 #
 # Inspired by recollq.py by Jean-Francois Dockes.
 #
 # Anders Jensen-Urstad <anders@unix.se>
 # License: GPLv2
-
-from __future__ import absolute_import, division, print_function, unicode_literals
-__resclass__ = type
 
 import sys
 import re
@@ -21,11 +18,6 @@ from base64 import b64encode, b64decode
 from subprocess import Popen, PIPE
 from recoll import recoll
 
-try:
-    unicode('')
-except NameError:
-    unicode = str
-
 class matchmethods(object):
     def startMatch(self, idx):
         return '<b>'
@@ -35,6 +27,12 @@ class matchmethods(object):
 def colorize(string, color):
     return '<span color=\"%s\">%s</span>' % (color, string)
 
+def to_unicode(string):
+    if string and not isinstance(string, str):
+        return str(string, 'utf-8')
+    else:
+        return string
+
 def process_doc(query, doc, match_obj, args):
     res = {}
 
@@ -43,7 +41,7 @@ def process_doc(query, doc, match_obj, args):
     else:
         res['title'] = escape(doc.filename)
 
-    absolute_path = b64encode(doc.url.replace('file://', '', 1).encode('utf-8'))
+    absolute_path = b64encode(doc.url.replace('file://', '', 1).encode('utf-8')).decode('utf-8')
 
     colors = {'abstract': args.color_abstract, 'file_path': args.color_path,
               'title': args.color_title, 'file_info': args.color_file_info}
@@ -90,7 +88,7 @@ def process_doc(query, doc, match_obj, args):
 
 def run_query(recoll_db, args):
     query = recoll_db.query()
-    results = query.execute(unicode(args.query_string, 'utf-8'))
+    results = query.execute(args.query_string)
     match_obj = matchmethods()
     user_num_results = int(args.num_results)
 
@@ -105,7 +103,7 @@ def run_query(recoll_db, args):
             results_list.append(process_doc(query, doc, match_obj, args))
 
         return results_list
-    return 'No results.'
+    return False
 
 def handle_args():
     epilog_str = 'By default this program simply outputs the path of the\n' \
@@ -160,13 +158,13 @@ def main(argv):
             rofi_search_cmd += args.rofi_options.split()
 
         search_dialog = Popen(rofi_search_cmd, stdout=PIPE, stderr=PIPE)
-        args.query_string = search_dialog.communicate()[0].strip()
+        args.query_string = to_unicode(search_dialog.communicate()[0].strip())
 
         if search_dialog.returncode != 0:
             sys.exit(1)
 
     if args.query_extra:
-        args.query_string += ' '.encode('utf-8') + args.query_extra
+        args.query_string += ' ' + args.query_extra
 
     if args.extra_dbs:
         args.extra_dbs = args.extra_dbs.split()
@@ -174,8 +172,14 @@ def main(argv):
     recoll_db = recoll.connect(confdir=args.recoll_confdir, extra_dbs=args.extra_dbs)
     recoll_db.setAbstractParams(maxchars=100, contextwords=10)
 
-    results_list = run_query(recoll_db, args)
-    results_formatted = ''.join(results_list)
+    if args.query_string:
+        results_list = run_query(recoll_db, args)
+        if results_list:
+            results_formatted = ''.join(results_list)
+        else:
+            results_formatted = 'No results.'
+    else:
+        sys.exit(0)
 
     rofi_element_height = '3'
     if not args.show_abstract:
@@ -191,8 +195,8 @@ def main(argv):
     selected_match = rofi.communicate(input=results_formatted.encode('utf-8'))[0].decode('utf-8')
 
     # If a match was selected, decode its file path and do something with it
-    if selected_match:
-        file_path = b64decode(selected_match.split()[-1])
+    if selected_match and results_list:
+        file_path = b64decode(selected_match.split()[-1]).decode('utf-8')
 
         if args.xclip_copy:
             xclip = Popen(['xclip', '-selection', 'primary', '-f'], stdin=PIPE)
