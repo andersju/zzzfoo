@@ -56,11 +56,11 @@ def process_doc(query, doc, match_obj, args):
     res['abstract'] = ''
     if args.show_abstract:
         if args.synthetic_abstract:
-            res['abstract'] = escape(query.makedocabstract(doc, methods=match_obj)).strip()
+            res['abstract'] = escape(query.makedocabstract(doc, methods=match_obj)).strip().replace('\0', '')
             res['abstract'] = res['abstract'].replace('&lt;b&gt;', '<b>')
             res['abstract'] = res['abstract'].replace('&lt;/b&gt;', '</b>')
         else:
-            res['abstract'] = escape(doc.abstract).strip()
+            res['abstract'] = escape(doc.abstract).strip().replace('\0', '')
             res['abstract'] = query.highlight(res['abstract'], ishtml=0, methods=match_obj)
 
     # Try to check if document is contained with another document. Not sure how useful
