@@ -60,14 +60,14 @@ for a reminder on how to set default applications for different MIME types.)_
 
 Exclude files of type message/rfc822 (emails), open selected file with `xdg-open`:
 
-    zzzfoo -e ' -mime:message/rfc822' -o xdg-open
+    zzzfoo -e='-mime:message/rfc822' -o xdg-open
 
 _(See Recoll's manual section about [the query language](http://www.lesbonscomptes.com/recoll/usermanual/usermanual.html#RCL.SEARCH.LANG).
 Note that `$HOME/` is stripped from the **displayed** file path by default, but not from the one actually used when opening.)_
 
 Pass some options to Rofi -- here window at top right, 50% width:
 
-    zzzfoo -r '-location 3 -width 50'
+    zzzfoo -r="-location 3 -width 50"
 
 Run query directly (and show results in Rofi) without using the search dialog,
 light grey color for abstracts:
@@ -93,7 +93,7 @@ For theming Rofi, see https://github.com/DaveDavenport/rofi-themes.
 I suggest binding zzzfoo to something convenient. For example, for i3 I have the
 following in `~/.i3/config`:
 
-    bindsym $mod+space exec --no-startup-id ~/bin/zzzfoo -e ' -mime:message/rfc822' -o xdg-open
+    bindsym $mod+space exec --no-startup-id ~/bin/zzzfoo -e="-mime:message/rfc822" -o xdg-open
 
 Messy Python-free sed-n-awk alternative
 ---------------------------------------

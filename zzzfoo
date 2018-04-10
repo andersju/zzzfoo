@@ -115,7 +115,7 @@ def handle_args():
                         help='Recoll config directory, if not default (overrides $RECOLL_CONFDIR)')
     parser.add_argument('-e', '--query-extra', default=None,
                         help='Additional search arguments to add to Recoll query.\n' \
-                        'Note: if the extra query starts with a dash, put a space before it,\n' \
+                        'To avoid issues use a leading space (-e \' -foo\'),\n' \
                         'or do --query-extra="-foo"')
     parser.add_argument('-i', '--extra-dbs', default=[],
                         help='Additional index(es) to search. E.g. -i ~/.recoll-foo.\n' \
@@ -133,7 +133,9 @@ def handle_args():
     parser.add_argument('-q', '--query-string', default=None,
                         help='Query (otherwise search dialog will be shown)')
     parser.add_argument('-r', '--rofi-options', default=None,
-                        help='Extra arguments to Rofi, e.g. -r \'-width 60 -location 1\'')
+                        help='Extra arguments to Rofi. To avoid issues use a leading space, e.g.:\n' \
+                        '-r \' -width 60 -location 1\'\n' \
+                        'or do --rofi-options=\'-width 60 -location 1\'')
     parser.add_argument('-p', '--strip-path', default=getenv('HOME', None),
                         help='Path to strip from *displayed* file path. Default: $HOME.\n' \
                         'Don\'t include trailing slash. Set to \'\' to disable.')
