@@ -13,7 +13,7 @@ script is basically a one-liner that got out of hand. However, if you want
 titles and MIME types and highlighted extracts and colors, as well as
 various options, keep reading.
 
-WARNING: Still experimental, use at your own risk, etc.
+WARNING: Experimental, things might suddenly change, use at your own risk, etc.
 
 ![zzzfoo screenshot](https://anders.unix.se/images/zzzfoo_01.png)
 
@@ -65,16 +65,18 @@ Exclude files of type message/rfc822 (emails), open selected file with `xdg-open
 _(See Recoll's manual section about [the query language](http://www.lesbonscomptes.com/recoll/usermanual/usermanual.html#RCL.SEARCH.LANG).
 Note that `$HOME/` is stripped from the **displayed** file path by default, but not from the one actually used when opening.)_
 
-Pass some options to Rofi -- here window at top right, 50% width:
+By default, Rofi shows 15 lines/rows. zzzfoo makes each line have a height
+of 3 characters. If this makes the window height too big, you can pass some options to Rofi;
+here window at top right, 50% width, 5 lines/rows:
 
-    zzzfoo -r="-location 3 -width 50"
+    zzzfoo -r="-location 3 -width 50 -lines 5"
 
 Run query directly (and show results in Rofi) without using the search dialog,
 light grey color for abstracts:
 
-    zzzfoo -q foobar --color-abstract '#777'
+    zzzfoo --color-abstract '#777' foobar
 
-    zzzfoo -q 'quote if multiple search terms' --color-abstract '#777'
+    zzzfoo --color-abstract '#777' 'quote if multiple search terms'
 
 Show synthetic abstracts (i.e. constructed by extracting text around search terms;
 the indexed abstract, shown by default, is often just the beginning of the file):

@@ -130,8 +130,8 @@ def handle_args():
                         help='Number of results to show (default 20; 0 for no limit)')
     parser.add_argument('-o', '--open-with', default=None,
                         help='Open match with specified program., e.g. -o xdg-open, -o \'subl -n\'')
-    parser.add_argument('-q', '--query-string', default=None,
-                        help='Query (otherwise search dialog will be shown)')
+    parser.add_argument('query_string', nargs='?', default=None,
+                        help='Search query. Quote multiple terms. If omitted, search dialog will be shown.')
     parser.add_argument('-r', '--rofi-options', default=None,
                         help='Extra arguments to Rofi. To avoid issues use a leading space, e.g.:\n' \
                         '-r \' -width 60 -location 1\'\n' \
