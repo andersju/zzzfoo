@@ -13,7 +13,7 @@ script is basically a one-liner that got out of hand. However, if you want
 titles and MIME types and highlighted extracts and colors, as well as
 various options, keep reading.
 
-WARNING: Experimental, things might suddenly change, use at your own risk, etc.
+WARNING: Still at version 0.x, use at your own risk, etc.
 
 ![zzzfoo screenshot](https://anders.unix.se/images/zzzfoo_01.png)
 

@@ -9,6 +9,8 @@
 # Anders Jensen-Urstad <anders@unix.se>
 # License: GPLv2
 
+__version__ = "0.1"
+
 import sys
 import re
 from os import getenv
@@ -141,6 +143,8 @@ def handle_args():
                         'Don\'t include trailing slash. Set to \'\' to disable.')
     parser.add_argument('-x', '--xclip-copy', dest='xclip_copy', action='store_true',
                         help='Copy path of selected match to X primary selection (xclip required)')
+    parser.add_argument('-V', '--version', action='version', help='Show program version.',
+                        version='%(prog)s {version}'.format(version=__version__))
 
     colors = ['--color-abstract', '--color-file-info', '--color-path', '--color-title']
     for color in colors:
