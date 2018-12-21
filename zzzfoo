@@ -145,6 +145,7 @@ def handle_args():
                         help='Copy path of selected match to X primary selection (xclip required)')
     parser.add_argument('-V', '--version', action='version', help='Show program version.',
                         version='%(prog)s {version}'.format(version=__version__))
+    parser.add_argument('--prompt', default='Search', help='Rofi prompt')
 
     colors = ['--color-abstract', '--color-file-info', '--color-path', '--color-title']
     for color in colors:
@@ -158,7 +159,7 @@ def main(argv):
 
     # If query wasn't specified on command line, open a Rofi dialog to ask for it
     if not args.query_string:
-        rofi_search_cmd = ['rofi', '-dmenu', '-p', 'Search']
+        rofi_search_cmd = ['rofi', '-dmenu', '-p', args.prompt]
 
         if args.rofi_options:
             rofi_search_cmd += args.rofi_options.split()
