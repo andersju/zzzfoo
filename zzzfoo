@@ -9,7 +9,7 @@
 # Anders Jensen-Urstad <anders@unix.se>
 # License: GPLv2
 
-__version__ = "0.1"
+__version__ = "0.2"
 
 import sys
 import re
@@ -170,7 +170,7 @@ def main(argv):
         if search_dialog.returncode != 0:
             sys.exit(1)
 
-    if args.query_extra:
+    if args.query_extra and args.query_string:
         args.query_string += ' ' + args.query_extra
 
     if args.extra_dbs:
@@ -212,7 +212,7 @@ def main(argv):
         if args.open_with:
             open_cmd = args.open_with.split()
             open_cmd.append(file_path)
-            Popen(open_cmd, stdout=PIPE, stderr=PIPE)
+            Popen(open_cmd)
             sys.exit(0)
 
         print(file_path)
