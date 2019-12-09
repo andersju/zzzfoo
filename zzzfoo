@@ -9,13 +9,13 @@
 # Anders Jensen-Urstad <anders@unix.se>
 # License: GPLv2
 
-__version__ = "0.2"
+__version__ = "0.3"
 
 import sys
 import re
 from os import getenv
 from argparse import ArgumentParser, RawTextHelpFormatter
-from cgi import escape
+from html import escape
 from base64 import b64encode, b64decode
 from subprocess import Popen, PIPE
 from recoll import recoll
@@ -39,16 +39,16 @@ def process_doc(query, doc, match_obj, args):
     res = {}
 
     if doc.title:
-        res['title'] = escape(doc.title)
+        res['title'] = escape(doc.title, False)
     else:
-        res['title'] = escape(doc.filename)
+        res['title'] = escape(doc.filename, False)
 
     absolute_path = b64encode(doc.url.replace('file://', '', 1).encode('utf-8')).decode('utf-8')
 
     colors = {'abstract': args.color_abstract, 'file_path': args.color_path,
               'title': args.color_title, 'file_info': args.color_file_info}
 
-    res['file_path'] = escape(doc.url)
+    res['file_path'] = escape(doc.url, False)
     res['file_path'] = res['file_path'].replace('file://', '', 1)
     if args.strip_path and res['file_path'].startswith(args.strip_path):
         res['file_path'] = res['file_path'][len(args.strip_path) + 1:]
@@ -58,11 +58,11 @@ def process_doc(query, doc, match_obj, args):
     res['abstract'] = ''
     if args.show_abstract:
         if args.synthetic_abstract:
-            res['abstract'] = escape(query.makedocabstract(doc, methods=match_obj)).strip().replace('\0', '')
+            res['abstract'] = escape(query.makedocabstract(doc, methods=match_obj), False).strip().replace('\0', '')
             res['abstract'] = res['abstract'].replace('&lt;b&gt;', '<b>')
             res['abstract'] = res['abstract'].replace('&lt;/b&gt;', '</b>')
         else:
-            res['abstract'] = escape(doc.abstract).strip().replace('\0', '')
+            res['abstract'] = escape(doc.abstract, False).strip().replace('\0', '')
             res['abstract'] = query.highlight(res['abstract'], ishtml=0, methods=match_obj)
 
     # Try to check if document is contained with another document. Not sure how useful
