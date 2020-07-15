@@ -19,6 +19,7 @@ from html import escape
 from base64 import b64encode, b64decode
 from subprocess import Popen, PIPE
 from recoll import recoll
+import shlex
 
 class matchmethods(object):
     def startMatch(self, idx):
@@ -146,6 +147,8 @@ def handle_args():
     parser.add_argument('-V', '--version', action='version', help='Show program version.',
                         version='%(prog)s {version}'.format(version=__version__))
     parser.add_argument('--prompt', default='Search', help='Rofi prompt')
+    parser.add_argument('--search-mesg', default=None, help='Message for the search prompt')
+    parser.add_argument('--result-mesg', default=None, help='Message for the result prompt')
 
     colors = ['--color-abstract', '--color-file-info', '--color-path', '--color-title']
     for color in colors:
@@ -160,9 +163,11 @@ def main(argv):
     # If query wasn't specified on command line, open a Rofi dialog to ask for it
     if not args.query_string:
         rofi_search_cmd = ['rofi', '-dmenu', '-p', args.prompt]
+        if args.search_mesg is not None:
+            rofi_search_cmd += ['-mesg', args.search_mesg]
 
         if args.rofi_options:
-            rofi_search_cmd += args.rofi_options.split()
+            rofi_search_cmd += shlex.split(args.rofi_options)
 
         search_dialog = Popen(rofi_search_cmd, stdout=PIPE, stderr=PIPE)
         args.query_string = to_unicode(search_dialog.communicate()[0].strip())
@@ -194,8 +199,10 @@ def main(argv):
 
     rofi_results_cmd = ['rofi', '-dmenu', '-markup-rows', '-eh', rofi_element_height,
                         '-sep', '\t', '-p', 'Filter results']
+    if args.result_mesg is not None:
+        rofi_results_cmd += ['-mesg', args.result_mesg]
     if args.rofi_options:
-        rofi_results_cmd += args.rofi_options.split()
+        rofi_results_cmd += shlex.split(args.rofi_options)
 
     # Pipe formatted results to Rofi
     rofi = Popen(rofi_results_cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
