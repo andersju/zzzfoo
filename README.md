@@ -33,7 +33,7 @@ Note that Ubuntu 16.04 has Rofi 0.15.x which is very outdated. You need 1.3 or l
 See Rofi's [installation guide](https://github.com/DaveDavenport/rofi/blob/next/INSTALL.md).
 
 Start `recoll`, configure it to your liking and let it index. (Recoll full-text indexes a bunch of file
-types natively; others need [various helper programs](http://www.lesbonscomptes.com/recoll/features.html#doctypes),
+types natively; others need [various helper programs](https://www.lesbonscomptes.com/recoll/pages/features.html#doctypes),
 which may or may not be installed.)
 
 Installation
