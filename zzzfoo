@@ -13,6 +13,7 @@ __version__ = "0.4"
 
 import sys
 import re
+import os
 from os import getenv
 from argparse import ArgumentParser, RawTextHelpFormatter
 from html import escape
@@ -157,20 +158,65 @@ def handle_args():
     parser.set_defaults(show_abstract=True, xclip_copy=False, synthetic_abstract=False)
     return parser.parse_args()
 
+def get_history():
+    history_file = os.environ['HOME'] + '/.local/share/rofi/rofi_recoll_history'
+    if os.path.isfile(history_file):
+        with open(history_file, 'r') as hist_file:
+            history_list = clean_history(hist_file.readlines())
+            if len(history_list) > 0:
+                return history_list
+    return False
+
+def clean_history(history_list):
+    history_list = list(dict.fromkeys(history_list)) # remove duplicates
+    for i, line in enumerate(history_list):
+        history_list[i] = line.strip('\r\n\t')
+        if (len(history_list[i]) == 0):
+            del history_list[i]
+    return history_list
+
+def add_history(query_string):
+    history_file = os.environ['HOME'] + '/.local/share/rofi/rofi_recoll_history'
+    search_term = query_string.strip('\n')
+    if os.path.isfile(history_file):
+        with open(history_file) as hist_file:
+            history_list = clean_history(hist_file.readlines())
+            if search_term not in history_list:
+                history_list.insert(0, search_term)
+            else: # put it back on top of the list
+                history_list.remove(search_term)
+                history_list.insert(0, search_term)
+        with open(history_file, 'w') as hist_file:
+            if len(history_list) > 10:
+                history_list = history_list[:10]
+            hist_file.write(('\n').join(history_list))
+    else:
+        with open(history_file, 'w') as hist_file:
+            hist_file.write('%s\n' % search_term)
+
 def main(argv):
     args = handle_args()
+    history = get_history()
 
     # If query wasn't specified on command line, open a Rofi dialog to ask for it
     if not args.query_string:
-        rofi_search_cmd = ['rofi', '-dmenu', '-p', args.prompt]
+        rofi_element_height = '1'
+        rofi_search_cmd = ['rofi', '-dmenu', '-markup-rows', '-eh', rofi_element_height, '-sep', '\t', '-p', args.prompt  ]
         if args.search_mesg is not None:
             rofi_search_cmd += ['-mesg', args.search_mesg]
 
         if args.rofi_options:
             rofi_search_cmd += shlex.split(args.rofi_options)
 
-        search_dialog = Popen(rofi_search_cmd, stdout=PIPE, stderr=PIPE)
-        args.query_string = to_unicode(search_dialog.communicate()[0].strip())
+        search_dialog = Popen(rofi_search_cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+
+        history_str = ''
+        if(history):
+            history_str = '\t'.join(history)
+        selected_match = search_dialog.communicate(input=history_str.encode('utf-8'))[0].decode('utf-8')
+        if selected_match:
+            add_history(selected_match)
+        args.query_string = to_unicode(search_dialog.communicate()[0])
 
         if search_dialog.returncode != 0:
             sys.exit(1)
